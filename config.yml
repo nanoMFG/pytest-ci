@@ -7,8 +7,8 @@ description: Description # Longer description for course, displayed on the cours
 # This will be used when the repository is created for each individual learner
 
 template:
-  name: example-course # the name of the repository when it is created for the learner
-  repo: learninglab-template # the name of the repository to be copied, must have the same owner as the course. If omitted, the learner's repository will be empty.
+  name: pytest-ci-course # the name of the repository when it is created for the learner
+  repo: pytest-ci-template # the name of the repository to be copied, must have the same owner as the course. If omitted, the learner's repository will be empty.
   description: Description # (OPTIONAL) A one-line description which will be set for the GitHub repository.
 
 # `before` block
