@@ -18,25 +18,41 @@ template:
 # Below are example actions, full list at https://lab.github.com/docs/actions/
 before:
 - type: updateBranchProtection # Protects the master branch 
-- type: createIssue
-  title: Getting started with NanoMFG
+- type: createPullRequest
+  title: Trying out CI
   body: 01_NanoMFG.md
+  base: "%payload.pull_request.head.ref%"
+  head: check
+  store:
+  first_pr_url: "{{ result.data.html_url }}"
   
 # Steps for the course
 # A list of steps that take the learner through the course
 # Create one step for each action that a learner will complete
 
 steps:
-# Step 1: INTERNAL COMMENT DESCRIBING STEP 
-- title: Close an issue # the title of the step, shown to the learner in the course progress page
-  description: Example step for course # a description of the step, shown to the learner in the course progress page
-  event: issues.closed # the event that will trigger the actions to be executed, full list at https://developer.github.com/v3/activity/events/types/
-  link: '{{ repoUrl }}/issues/1' 
-  actions: # a list of the actions that will occur when the step is triggered by an event
-  - type: createPullRequest
-    title: example-action
-    head: example-action
-    body: example-pull.md
+  # Step 1
+  # 1. Learner fixes the code that broke the build
+  - title: Fix the test
+    description: Edit the file that's causing the test to fail
+    event: check_suite.completed
+    link: "{{ store.first_pr_url }}"
+    actions:
+      - type: gate
+        left: "%payload.check_suite.app.slug%"
+        operator: ===
+        right: github-actions
+      - type: gate
+        left: "%payload.check_suite.conclusion%"
+        operator: ===
+        right: success
+        else:
+          - type: respond
+            with: e-failed-run.md
+      - type: createReview
+        event: APPROVE
+        body: 0X_merge.md
+        pullRequest: CI for Node
 
 # Step 2: INTERNAL COMMENT FOR STEP 2
 # - title: 
