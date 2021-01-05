@@ -22,7 +22,7 @@ before:
   title: Trying out CI
   body: 01_NanoMFG.md
   base: "%payload.pull_request.head.ref%"
-  head: check
+  head: fix-pytest
   store:
     first_pr_url: "{{ result.data.html_url }}"
   
