@@ -1,5 +1,5 @@
-title: Template # Learning Lab course
-tagline: Template for new lab courses # Description for your course, displayed on the course catalog
+title: Pytest Experiment # Learning Lab course
+tagline: Trying out CI with learning lab # Description for your course, displayed on the course catalog
 description: Description # Longer description for course, displayed on the course's landing page
 
 # Repository setup
@@ -24,7 +24,7 @@ before:
   base: "%payload.pull_request.head.ref%"
   head: check
   store:
-  first_pr_url: "{{ result.data.html_url }}"
+    first_pr_url: "{{ result.data.html_url }}"
   
 # Steps for the course
 # A list of steps that take the learner through the course
