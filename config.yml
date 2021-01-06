@@ -57,26 +57,4 @@ steps:
         right: github-actions
       - type: respond
         with: 01_NanoMFG.md
-  # Step 2
-  # 1. GitHub sends us a workflow run.
-  # 1. Bot explains what is happening, and why the page build failed (we don't have a [test script](https://github.com/githubtraining/actions-template/blob/main/package.json#L10))
-  - title: Run a templated workflow
-    description: Wait for GitHub to run the templated workflow and report back the results
-    event: check_suite.completed
-    link: "{{ store.second_pr_url }}"
-    actions:
-      - type: gate
-        left: "%payload.check_suite.app.slug%"
-        operator: ===
-        right: github-actions
-      - type: respond
-        with: 0X_merge.md
-        issue: Add jest tests
-        action_id: jestPr
-      - type: respond
-        issue: CI for Node
-        with: 02_template-workflow-ran.md
-        data:
-          url: "%actions.jestPr.data.html_url%"
-          actionsUrl: "%payload.repository.html_url%/actions"
 
