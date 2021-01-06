@@ -47,7 +47,7 @@ steps:
       - type: gate
         left: "%payload.pull_request.title%"
         operator: ===
-        right: CI for Node
+        right: CI for Python
         else:
           - type: respond
             with: e-rename-pr.md
