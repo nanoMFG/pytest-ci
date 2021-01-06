@@ -45,6 +45,17 @@ steps:
     link: "{{ store.first_issue_url }}"
     actions:
       - type: gate
+        left: "%payload.pull_request.title%"
+        operator: ===
+        right: CI for Node
+        else:
+          - type: respond
+            with: e-rename-pr.md
+            issue: 1
+      - type: respond
+        with: 01_NanoMFG.md
+        issue: 1
+      - type: gate
         left: "%payload.check_suite.conclusion%"
         operator: ===
         right: success
