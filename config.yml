@@ -42,7 +42,7 @@ steps:
   - title: Run a templated workflow
     description: Wait for GitHub to run the templated workflow and report back the results
     event: check_suite.completed
-    link: '{{ repoUrl }}/pull/2'
+    link: "{{ store.first_issue_url }}"
     actions:
       - type: gate
         left: "%payload.check_suite.conclusion%"
