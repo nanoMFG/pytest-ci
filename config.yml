@@ -17,26 +17,33 @@ template:
 # Some actions require additional options as the one shown below, those options should appear below `type:`
 # Below are example actions, full list at https://lab.github.com/docs/actions/
 before:
-- type: updateBranchProtection # Protects the master branch 
-- type: createIssue
-  title: There's a bug!
-  body: 01_NanoMFG.md
+  # 1. Bot creates [Tic tac toe game](https://github.com/githubtraining/actions-template) for the learner, protects main branch
+  # 1. Bot opens a bug report explaining the app is broken, asks learner to figure out what's wrong by adding some testing.
+  - type: updateBranchProtection
+  - type: createIssue
+    title: There's a bug!
+    body: 01_NanoMFG.md
+    store:
+      first_issue_url: "{{ result.data.html_url }}"
+
+# Repository artifacts:
+# 1. Issue: There's a bug!
+# 2. PR: CI for Node (learner)
+# 3. PR: Add jest tests (bot)
+# 4. Issue: A workflow for the entire team
+# 5. PR: Improve CI (learner)
+# 6. PR: A custom workflow (bot)
+# 7. Issue: Congratulations
 
 steps:
-# Step 1: Create pull request
-  - title: Use a templated workflow
-    description: Create a pull request with a templated workflow
-    event: pull_request
-    link: "{{ repoUrl }}/issues/1"
+  # Step 1
+  # 1. Learner opens a PR with a new workflow by using the [templated workflow for Node](https://github.com/actions/starter-workflows/blob/main/ci/node.js.yml)
+  # 1. Bot leaves line-specific comments explaining the pieces that were just added from the templated workflow.
+  - title: Run a templated workflow
+    description: Wait for GitHub to run the templated workflow and report back the results
+    event: check_suite.completed
+    link: "{{ store.first_issue_url }}"
     actions:
-      - type: gate
-        gates:
-          - left: "%payload.action%"
-            operator: ===
-            right: opened
-          - left: "%payload.action%"
-            operator: ===
-            right: edited
       - type: gate
         left: "%payload.pull_request.title%"
         operator: ===
@@ -44,24 +51,32 @@ steps:
         else:
           - type: respond
             with: e-failed-run.md
-            
-# Step 2: Fix Pytest 
-  - title: Fix the test
-    description: Edit the file that's causing the test to fail
+      - type: gate
+        left: "%payload.check_suite.app.slug%"
+        operator: ===
+        right: github-actions
+      - type: respond
+        with: 01_NanoMFG.md
+  # Step 2
+  # 1. GitHub sends us a workflow run.
+  # 1. Bot explains what is happening, and why the page build failed (we don't have a [test script](https://github.com/githubtraining/actions-template/blob/main/package.json#L10))
+  - title: Run a templated workflow
+    description: Wait for GitHub to run the templated workflow and report back the results
     event: check_suite.completed
-    link: "{{ repoUrl }}/pull/1"
+    link: "{{ store.second_pr_url }}"
     actions:
       - type: gate
         left: "%payload.check_suite.app.slug%"
         operator: ===
         right: github-actions
-      - type: gate
-        left: "%payload.check_suite.conclusion%"
-        operator: ===
-        right: success
-        else:
-          - type: respond
-            with: e-failed-run.md
       - type: respond
-        with: 01_NanoMFG.md
+        with: 0X_merge.md
+        issue: Add jest tests
+        action_id: jestPr
+      - type: respond
+        issue: CI for Node
+        with: 02_template-workflow-ran.md
+        data:
+          url: "%actions.jestPr.data.html_url%"
+          actionsUrl: "%payload.repository.html_url%/actions"
 
