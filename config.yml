@@ -44,6 +44,8 @@ steps:
     event: check_suite.completed
     link: "{{ store.first_issue_url }}"
     actions:
+      - type: respond
+        with: 01_NanoMFG.md
       - type: gate
         left: "%payload.pull_request.title%"
         operator: ===
@@ -51,10 +53,6 @@ steps:
         else:
           - type: respond
             with: e-failed-run.md
-      - type: gate
-        left: "%payload.check_suite.app.slug%"
-        operator: ===
-        right: github-actions
       - type: respond
         with: 01_NanoMFG.md
 
