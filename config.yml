@@ -55,7 +55,7 @@ steps:
       - type: respond
         with: 01_NanoMFG.md
         issue: 1
-
+# Step 2
 - title: Run a templated workflow 2
     description: Wait for GitHub to run the templated workflow and report back the results
     event: check_suite.completed
