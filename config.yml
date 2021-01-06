@@ -41,7 +41,9 @@ steps:
   # 1. Bot leaves line-specific comments explaining the pieces that were just added from the templated workflow.
   - title: Run a templated workflow 1
     description: Wait for GitHub to run the templated workflow and report back the results
-    event: pull_request
+    event:
+      - pull_request
+      - check_suite.completed
     link: "{{ store.first_issue_url }}"
     actions:
       - type: gate
@@ -55,12 +57,6 @@ steps:
       - type: respond
         with: 01_NanoMFG.md
         issue: 1
-# Step 2
-  - title: Run a templated workflow 2
-    description: Wait for GitHub to run the templated workflow and report back the results
-    event: check_suite.completed
-    link: "{{ store.first_issue_url }}"
-    actions:
       - type: gate
         left: "%payload.check_suite.conclusion%"
         operator: ===
